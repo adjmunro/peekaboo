@@ -1,4 +1,4 @@
-# lasergoose
+# LaserGoose
 
 Reusable GUI feedback loop for Claude Code. Captures any running app's window, analyses it, and iterates — without manual screenshots or third-party tools.
 
@@ -74,7 +74,7 @@ lasergoose --app MyAndroidApp --platform android \
      --project ~/Developer/my-android-app
 
 # ThunderSloth alias (add to ~/.zshrc, [project]/.env, or justfile)
-alias lasergoose-turboyak='lasergoose --app ThunderSloth --platform macos --build xcode \
+alias lasergoose-thundersloth='lasergoose --app ThunderSloth --platform macos --build xcode \
   --scheme ThunderSlothApp \
   --project ~/Developer/ThunderSloth/ThunderSloth/ThunderSloth.xcodeproj'
 ```
@@ -109,12 +109,33 @@ Incremental builds (`xcodebuild build`, `swift build`, `./gradlew assembleDebug`
 
 `--hot` is available for trivial cosmetic tweaks but **cannot handle** struct/class layout changes, new model fields, new actors, or anything that changes type definitions.
 
+## Dependencies
+
+### Native to macOS (no install required)
+| Tool | Purpose |
+|---|---|
+| `osascript` | Runs AppleScript to activate apps and send keystrokes |
+| `screencapture` | Captures a specific window by ID on macOS |
+| `swift` | Compiles and runs the inline Swift window-query snippet; builds SPM projects |
+| `xcrun` / `simctl` | Controls the iOS Simulator and takes screenshots |
+| `xcodebuild` | Builds Xcode projects |
+| `awk`, `base64`, `sleep` | Standard shell utilities for parsing output, encoding images, and timing |
+| CoreGraphics, Foundation | macOS frameworks used by the inline Swift snippet to query window info |
+
+### Third-party (must be installed separately)
+| Tool | Install | Purpose |
+|---|---|---|
+| `adb` (Android Debug Bridge) | Android Studio / Android SDK | Communicates with Android devices and emulators, captures screenshots |
+| `xcpretty` | `gem install xcpretty` | Formats `xcodebuild` output (optional — build continues without it) |
+
+> **Android SDK path:** `adb` is expected at `~/Library/Android/sdk/platform-tools/adb` (standard Android Studio location).
+
 ## Claude Code integration
 
 After each code change, Claude runs:
 
 ```zsh
-lasergoose-turboyak
+lasergoose-thundersloth
 # then reads /tmp/lasergoose.png via the Read tool
 ```
 
